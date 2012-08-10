@@ -8,6 +8,8 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  password_digest :string(255)
+#  remember_token  :string(255)
+#  admin           :boolean          default(FALSE)
 #
 
 require 'spec_helper'
@@ -55,6 +57,14 @@ describe User do
   describe "when name is too long" do
     before { @user.name = "a" * 51 }
     it { should_not be_valid }
+  end
+
+  describe "accessible attributes" do
+    it "should not allow access to user_id" do
+      expect do
+        User.new(admin: true)
+      end.should raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
   end
 
   describe "when email format is invalid" do
